@@ -1,18 +1,20 @@
 # Issues and how I fixed them
 1. defining and using async functions in useEffect
 
-
-React.useEffect(()=>{
+`
+      
+     React.useEffect(()=>{
       const fetchData = async (name,textInput) => {
         ...
       }
 
       fetchData(name,textInput).catch(console.error)
-    },[name,textInput])
+    },[name,textInput])`
 
 2. incompatible data body format when sending post request (or undefined)
 
 **original**: 
+
 <img width="477" alt="Screen Shot 2022-06-03 at 4 00 14 PM" src="https://user-images.githubusercontent.com/90943803/171952158-d254a8a7-c0a6-41fb-9f08-fe6d73ff0dd8.png">
 
 

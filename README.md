@@ -64,6 +64,8 @@ var formdata = new FormData();
 
 solution: If you want to perform an action on state update, you need to use the useEffect hook (https://stackoverflow.com/questions/54069253/the-usestate-set-method-is-not-reflecting-a-change-immediately)
 
+2. For GitHub, don't forget to `git pull` before `git push`
+
 
 # TODOS
 - [ ]  allow multi select 

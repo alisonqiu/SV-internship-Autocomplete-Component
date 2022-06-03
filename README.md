@@ -68,6 +68,6 @@ solution: If you want to perform an action on state update, you need to use the 
 
 
 # TODOS
-- [ ]  allow multi select 
+- [x]  allow multi select 
 - [ ] change the display of text fields 
 - [ ] dynamic rendering names in var.js 

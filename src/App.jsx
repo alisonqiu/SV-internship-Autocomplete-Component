@@ -13,10 +13,11 @@ function App() {
     <p>
       <h1>Dropdown</h1>
       <Dropdown/>
+      {/* 
       <h1>Carddemo</h1>
       <Carddemo/>
       <h1>Tabledemo</h1>
-      <Tabledemo/>
+      <Tabledemo/> */}
     </p>
   );
 }

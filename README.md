@@ -2,7 +2,7 @@
 1. defining and using async functions in useEffect
 
 **original**: 
-`
+
 const useFetch = (data) => {
     //should define this in main function
     const [dropdownOptions, setDropdownOptions] = React.useState([]);
@@ -13,15 +13,14 @@ const useFetch = (data) => {
       async function fetchData() {
       ...
     }
-    fetchData();
-  }, [data]);
+    fetchData();}, [data]);
 
 export default function Dropdown() {
  ...
   const {dropdownOptions, loading} = useFetch(data);
   ...
 
-`
+
 **fixed**: 
 React.useEffect(()=>{
       const fetchData = async (name,textInput) => {
@@ -34,19 +33,19 @@ React.useEffect(()=>{
 2. incompatible data body format when sending post request (or undefined)
 
 **original**: 
-`
+
  const response = await fetch(base_url+'voyage/autocomplete', 
       { 
           method: 'POST', 
           body: JSON.stringify(data),
           headers: header
       }
-`
+
 
 **fixed**: 
 1.  postman -> code snippet -> JavaScript - Fetch
 
-`
+
 var formdata = new FormData();
         formdata.append(name, textInput);
         console.log("🚀 ~ name, textInput", name, textInput)
@@ -58,7 +57,7 @@ var formdata = new FormData();
         };
         fetch("https://voyages3-api.crc.rice.edu/voyage/autocomplete", requestOptions)
         .then(response => response.json())
-`
+
 
 ## otherthings I learned:
 1. the state update using the updater provided by useState hook is also asynchronous
@@ -67,6 +66,6 @@ solution: If you want to perform an action on state update, you need to use the 
 
 
 # TODOS
-[] allow multi select 
-[] change the display of text fields 
-[] dynamic rendering names in var.js 
+- [ ]  allow multi select 
+- [ ] change the display of text fields 
+- [ ] dynamic rendering names in var.js 

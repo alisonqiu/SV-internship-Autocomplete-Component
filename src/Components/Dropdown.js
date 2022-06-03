@@ -4,9 +4,13 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import { AppContext } from "../App";
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {autocomplete_text_fields, obj_autocomplete_text_fields} from './vars'
+//import MultipleSelect from "./Multiselect"
+
+
 
 const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
 //'Content-type': 'application/json' ,
@@ -24,9 +28,18 @@ const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscn
 
 
 export default function Dropdown() {
-  const [name, setName] = React.useState(autocomplete_text_fields[0]);
-  const [textInput, setTestInput] = React.useState("");
-  const [dropdownOptions, setDropdownOptions] = React.useState([]);
+  // const [name, setName] = React.useState(autocomplete_text_fields[0]);
+  // const [textInput, setTestInput] = React.useState("");
+  // const [dropdownOptions, setDropdownOptions] = React.useState([]);
+
+  const { name,
+    setName,
+    textInput,
+    setTestInput,
+    dropdownOptions,
+    setDropdownOptions,      
+    value,
+    setValue} = React.useContext(AppContext)
 
 
     React.useEffect(()=>{
@@ -134,9 +147,9 @@ export default function Dropdown() {
         label="name"
         onChange={handleChange}
       >
-        {/* TODO: allow multi select */}
-        {/* TODO: change the display of text fields */}
         {/* TODO: dynamic rendering names in var.js */}
+        {/* TODO: change the display of text fields */}
+        
         {
           autocomplete_text_fields.map((name)=>(
             <MenuItem value={name}>{name}</MenuItem>
@@ -145,17 +158,25 @@ export default function Dropdown() {
       </Select>
     </FormControl>
   </Box>
+     <div>{`value: ${value !== null ? `${value}` : 'null'}`}</div>
     <Autocomplete
       disablePortal
       autoHighlight
+      multiple
       id="combo-box-demo"
       options={dropdownOptions}
+      value={dropdownOptions[0]}
+      onChange={(event, newValue) => {
+        setValue(oldArray => [newValue][0]);
+        console.log(value)
+      }}
       sx={{ width: 300 }}
       renderInput={(params) => {
         //params.inputProps.value is what i type in 
-        console.log("🚀 ~ file: Dropdown.js ~ line 108 ~ Dropdown ~ params", params.inputProps.value)
+        //console.log("🚀 ~ file: Dropdown.js ~ line 108 ~ Dropdown ~ params", params.InputProps)
         setTestInput(params.inputProps.value)
         return <TextField {...params} label="field" />
+         
     }}
     />
     </>

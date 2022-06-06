@@ -1,62 +1,28 @@
 # Issues and how I fixed them
 1. defining and using async functions in useEffect
 
-**original**: 
-
-const useFetch = (data) => {
-    //should define this in main function
-    const [dropdownOptions, setDropdownOptions] = React.useState([]);
-
-
-    React.useEffect(()=> {
-    //should say const fetchData = async() ={...}
-      async function fetchData() {
-      ...
-    }
-    fetchData();}, [data]);
-
-export default function Dropdown() {
- ...
-  const {dropdownOptions, loading} = useFetch(data);
-  ...
-
-
-**fixed**: 
-React.useEffect(()=>{
+`
+      
+     React.useEffect(()=>{
       const fetchData = async (name,textInput) => {
         ...
       }
 
       fetchData(name,textInput).catch(console.error)
-    },[name,textInput])
+    },[name,textInput])`
 
 2. incompatible data body format when sending post request (or undefined)
 
 **original**: 
 
- const response = await fetch(base_url+'voyage/autocomplete', 
-      { 
-          method: 'POST', 
-          body: JSON.stringify(data),
-          headers: header
-      }
+<img width="477" alt="Screen Shot 2022-06-03 at 4 00 14 PM" src="https://user-images.githubusercontent.com/90943803/171952158-d254a8a7-c0a6-41fb-9f08-fe6d73ff0dd8.png">
 
 
 **fixed**: 
 1.  postman -> code snippet -> JavaScript - Fetch
+<img width="662" alt="Screen Shot 2022-06-03 at 4 00 18 PM" src="https://user-images.githubusercontent.com/90943803/171952180-e71b9d3b-0183-4a05-aced-6cf95ca6910d.png">
 
 
-var formdata = new FormData();
-        formdata.append(name, textInput);
-        console.log("🚀 ~ name, textInput", name, textInput)
-        var requestOptions = {
-            method: 'POST',
-            headers: header,
-            body: formdata,
-            redirect: 'follow'
-        };
-        fetch("https://voyages3-api.crc.rice.edu/voyage/autocomplete", requestOptions)
-        .then(response => response.json())
 
 
 ## otherthings I learned:
@@ -70,4 +36,5 @@ solution: If you want to perform an action on state update, you need to use the 
 # TODOS
 - [x]  allow multi select 
 - [ ] change the display of text fields 
-- [ ] dynamic rendering names in var.js 
+- [ ] Get human-readable labels from an options call piped into variable-selection dropdowns
+- [ ] clean up my code and use more appropriate var names 😂

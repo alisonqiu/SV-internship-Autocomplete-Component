@@ -38,6 +38,6 @@ solution: If you want to perform an action on state update, you need to use the 
 
 # TODOS
 - [x]  allow multi select 
-- [ ] change the display of text fields 
-- [ ] Get human-readable labels from an options call piped into variable-selection dropdowns
+- [?] change the display of text fields 
+- [x] Get human-readable labels from an options call piped into variable-selection dropdowns
 - [ ] clean up my code and use more appropriate var names 😂

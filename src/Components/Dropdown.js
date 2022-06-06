@@ -13,8 +13,6 @@ import {autocomplete_text_fields, obj_autocomplete_text_fields} from './vars'
 
 
 const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
-//'Content-type': 'application/json' ,
-//'Accept': 'application/json'
 }
 const base_url = "https://voyages3-api.crc.rice.edu/"
 const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscnljcGd0byJ9.kZvEfo7ywl2yLbztc_SSjw'
@@ -39,7 +37,8 @@ export default function Dropdown() {
     dropdownOptions,
     setDropdownOptions,      
     value,
-    setValue} = React.useContext(AppContext)
+    setValue,label,object} = React.useContext(AppContext)
+
 
 
     React.useEffect(()=>{
@@ -65,71 +64,12 @@ export default function Dropdown() {
       fetchData(name,textInput).catch(console.error)
     },[name,textInput])
 
-    //******************************* The function to get all autocomplete labels*/
-    
-    // const optionCall = async () => {
-    //   var myHeaders = new Headers();
-    //     myHeaders.append("Authorization", "Token 0bfda2118118484d52aeec86812269aadeb37c67");
-
-    //     var formdata = new FormData();
-    //     formdata.append("voyage_dates__date_departed_africa", "");
-
-    //     var requestOptions = {
-    //       method: 'OPTIONS',
-    //       headers: myHeaders,
-    //       body: formdata,
-    //       redirect: 'follow'
-    //     };
-
-    //     fetch("https://voyages3-api.crc.rice.edu/voyage/?hierarchical=False", requestOptions)
-    //       .then(response => response.json())
-    //       .then(result => {
-    //         console.log('666666666666',result)
-    //         var array_result = []
-            
-    //         for(var i in result){
-    //           array_result.push([i,result[i]])
-    //         }
-    //         console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
-    //         // Array(2)
-    //         //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
-    //         //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
-    //         // length: 2
-
-    //         const pokemon = array_result.map((obj) => ({
-    //           name: obj[0],
-    //           type: obj[1].type,
-    //           label: obj[1].label,
-    //           flatlabel: obj[1].flatlabel,
-    //         }))
-    //         console.log("🚀 ~ file: Dropdown.js ~ line 85 ~ pokemon ~ pokemon", pokemon)
-    //         //{name: 'voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent', type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
-
-
-    //         const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
-    //         console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
-    //         // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
-    //         // 1: {name: 'voyage_itinerary__port_of_departure__geo_location__parent_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Geographic Location : Location name'}
-    //         // 2:
-
-    //         var labels = []
-            
-    //         for(var i in filteredPokemonsByType){
-    //           labels.push(filteredPokemonsByType[i])
-    //         }
-    //         console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ labels", labels)
-    //         })
-
-    //       .catch(error => console.log('error', error));
-    // }
-
-    // optionCall()
-    //**************************************** */
 
   const handleChange = (event) => {
     setName(event.target.value);
  
   };
+
 
 
 
@@ -147,18 +87,34 @@ export default function Dropdown() {
         label="name"
         onChange={handleChange}
       >
-        {/* TODO: dynamic rendering names in var.js */}
-        {/* TODO: change the display of text fields */}
+
+        {/* 1. 😄 using static file  */}
         
-        {
+        {/* {
           autocomplete_text_fields.map((name)=>(
             <MenuItem value={name}>{name}</MenuItem>
           ))
+        } */}
+
+        {/* 2. 😄 using API NOT filtered by static file  */}
+
+        {/* {
+          label.map((name)=>(
+            <MenuItem value={name}>{name}</MenuItem>
+          ))
+        } */}
+
+        {/* 3. 😄 using API filtered by static file  */}
+
+        {
+          object.map((name)=>{
+            if(autocomplete_text_fields.includes(name['name'])){
+              return <MenuItem value={name['name']}>{name['flatlabel']}</MenuItem>}
+            })
         }
       </Select>
     </FormControl>
   </Box>
-     <div>{`value: ${value !== null ? `${value}` : 'null'}`}</div>
     <Autocomplete
       disablePortal
       autoHighlight

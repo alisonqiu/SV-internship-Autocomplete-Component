@@ -1,3 +1,6 @@
+# Getting started 
+`npm i && npm start`
+
 # Issues and how I fixed them
 1. defining and using async functions in useEffect
 

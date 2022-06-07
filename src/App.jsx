@@ -18,6 +18,14 @@ function App() {
   const [label, setLabel] = React.useState([]);
   const [object, setObject] = React.useState([]);
 
+  const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
+}
+const base_url = "https://voyages3-api.crc.rice.edu/"
+const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscnljcGd0byJ9.kZvEfo7ywl2yLbztc_SSjw'
+
+
+
+
       //******************************* The function to get all autocomplete labels*/
     
       const optionCall = async () => {
@@ -95,6 +103,39 @@ function App() {
      
       //**************************************** */
 
+      React.useEffect(()=>{
+        const fetchData = async (name,textInput) => {
+          var formdata = new FormData();
+          formdata.append(name, textInput);
+          console.log("🚀 ~ name, textInput", name, textInput)
+          var requestOptions = {
+              method: 'POST',
+              headers: header,
+              body: formdata,
+              redirect: 'follow'
+          };
+          fetch("https://voyages3-api.crc.rice.edu/voyage/autocomplete", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              console.log("🚀YAYAYAY fetch is successful!!! result", result)
+              var newOptions = result[name]
+              console.log("🚀 ~ file: Dropdown.js ~ line 43 ~ fetchData ~ newOptions", newOptions)
+              setDropdownOptions(newOptions) })
+        }
+  
+        fetchData(name,textInput).catch(console.error)
+      },[name,textInput])
+  
+  
+    const handleChange = (event) => {
+      setName(event.target.value);
+   
+    };
+  
+  
+  
+  
+  
   return (
     <AppContext.Provider
     value={{
@@ -107,7 +148,7 @@ function App() {
       value,
       setValue,
       label,
-      object
+      object,handleChange
 
     }}
   >

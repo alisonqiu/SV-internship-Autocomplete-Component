@@ -1,11 +1,29 @@
 import React from 'react';
 import './App.css';
 import {autocomplete_text_fields, obj_autocomplete_text_fields} from './Components/vars'
+//import Dropdown from './Components/Dropdown_old';
+import Main from './Components/Main';
 import Dropdown from './Components/Dropdown';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import Auto from './Components/Autocomplete';
+import SliderComponent from './Components/slider';
+import axios, { Axios } from 'axios';
+import {
+  Container,
+  Slider,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  ListItem,
+  Grid,
+  List,
+  ListItemText,
+  Card, CardContent, CardHeader, Box, Paper, Chip, TextField
+} from '@mui/material';
+import {TreeView, TreeItem} from '@mui/lab';
+import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
+import ChevronRightIcon from '@mui/icons-material/ArrowRightAlt';
+import { useQuery } from 'react-query'
+
 
 export const AppContext = React.createContext();
 
@@ -21,11 +39,9 @@ function App() {
   const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
 }
 const base_url = "https://voyages3-api.crc.rice.edu/"
-const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscnljcGd0byJ9.kZvEfo7ywl2yLbztc_SSjw'
 
 
-
-
+const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5f"}
       //******************************* The function to get all autocomplete labels*/
     
       const optionCall = async () => {
@@ -103,11 +119,15 @@ const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscn
      
       //**************************************** */
 
+      //😁 from Dropdown (originally Script)
+      const [labels, setLabels] = React.useState([]);
+      // var data = "init value";
+
       React.useEffect(()=>{
-        const fetchData = async (name,textInput) => {
+        const fetchData = async (labels,textInput) => {
           var formdata = new FormData();
-          formdata.append(name, textInput);
-          console.log("🚀 ~ name, textInput", name, textInput)
+          formdata.append(labels, textInput);
+          console.log("🚀 ~ labels[0], textInput", labels,labels[0], textInput)
           var requestOptions = {
               method: 'POST',
               headers: header,
@@ -118,19 +138,145 @@ const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscn
           .then(response => response.json())
           .then(result => {
               console.log("🚀YAYAYAY fetch is successful!!! result", result)
-              var newOptions = result[name]
+              var newOptions = result[labels]
               console.log("🚀 ~ file: Dropdown.js ~ line 43 ~ fetchData ~ newOptions", newOptions)
               setDropdownOptions(newOptions) })
         }
   
-        fetchData(name,textInput).catch(console.error)
-      },[name,textInput])
+        fetchData(labels[labels.length-1],textInput).catch(console.error)
+      },[labels,textInput])
+
+
+
+      const { isLoading, error, data: options } = useQuery('repoData', () => {
+              return fetch(base_url + "voyage/", {
+                  method: "OPTIONS",
+                  headers: headers
+              }).then(res => res.json())
+          }
+      )
+  
+      function isChildren(key) {
+          return key !== "type" && key !== "label" && key !== "flatlabel"
+      }
+  
+      function isLast(node) {
+          return Object.keys(node).length <= 3
+      }
+  
+      var count = 0;
+      const renderTree = (nodes, name) => {
+          //console.log("🚀 ~ file: Script.js ~ line 54 ~ Script ~ nodes", nodes)
+          return <TreeItem key={nodes.label} nodeId={""+count++} label={nodes.label? nodes.label:"Menu"}>
+              { Object.keys(nodes).map((key) =>
+                  isChildren(key)
+                      ? isLast(nodes[key])
+                          ? <ListItem key={key} disablePadding>
+                              <Checkbox  onChange={(event, checked) => handleCheck(checked, name ? (name.slice(2)+"__"+key) : key)}/>
+                              <ListItemText primary={key+" ("+nodes[key].flatlabel+")"} secondary={nodes[key].type}/>
+                          </ListItem>
+                          : renderTree(nodes[key], name+"__"+key)
+                      : null
+              )
+              }
+          </TreeItem>
+     
+  };
+  
+      function handleCheck(isChecked, label){
+          if (isChecked) {
+              setLabels([...labels, label])
+          }else{
+              setLabels(labels.filter((i) => i !== label))
+          }
+          console.log("💙label ",labels)
+      }
   
   
-    const handleChange = (event) => {
-      setName(event.target.value);
+      if (isLoading) return 'Loading...'
+  
+      if (error) return 'An error has occurred: ' + error.message
+  
+      
+      //😀 from dropdown_old
+      // React.useEffect(()=>{
+      //   const fetchData = async (name,textInput) => {
+      //     var formdata = new FormData();
+      //     formdata.append(name, textInput);
+      //     console.log("🚀 ~ name, textInput", name, textInput)
+      //     var requestOptions = {
+      //         method: 'POST',
+      //         headers: header,
+      //         body: formdata,
+      //         redirect: 'follow'
+      //     };
+      //     fetch("https://voyages3-api.crc.rice.edu/voyage/autocomplete", requestOptions)
+      //     .then(response => response.json())
+      //     .then(result => {
+      //         console.log("🚀YAYAYAY fetch is successful!!! result", result)
+      //         var newOptions = result[name]
+      //         console.log("🚀 ~ file: Dropdown.js ~ line 43 ~ fetchData ~ newOptions", newOptions)
+      //         setDropdownOptions(newOptions) })
+      //   }
+  
+      //   fetchData(name,textInput).catch(console.error)
+      // },[name,textInput])
+  
+  
+    // const handleChange = (event) => {
+    //   setName(event.target.value);
    
-    };
+    // };
+
+    //😀from slider
+    // var d = new FormData();
+    // d.append('aggregate_fields', ["voyage_slaves_numbers__imp_total_num_slaves_disembarked"]);
+
+    // const config =  {
+    //   method: 'post',
+    //   baseURL: 'https://voyages3-api.crc.rice.edu/voyage/aggregations',
+    //   headers: {'Authorization': 'Token 1bd7b6a695d87fb17a752fdcf58cc98c28486dd1'},
+    //   data:d
+    // }
+
+    // const [isLoading, setLoading] = React.useState(true);
+    // const [range, setRange] = React.useState([0,0]);
+    // const [sliderOutput, setSliderOutput] = React.useState([0,0]);
+
+    // React.useEffect(() => {
+    //     axios(config).then(res => {
+    //       console.log("begin", [Object.values(res.data)[0]["min"], Object.values(res.data)[0]["max"]])
+
+    //       var s = Object.values(res.data)[0]["min"]
+    //       var e = Object.values(res.data)[0]["max"]
+    
+    //       setRange([s,e])
+    //       console.log("range", [s,e])
+    //       setSliderOutput([s,e])
+    //       // setValue([range[0], range[1]/2]);
+    //       setLoading(false);
+    //     });
+    //     console.log("useEffect")
+    //   }, []);
+    //   // slider {
+      
+    //   // console.log(range)
+      
+    
+    //   function handleCommittedChange() {
+    //     console.log("onchange", sliderOutput);
+    //     //console.log("dataSend", dataSend);
+    //   }
+      
+    //   const handleSliderChange = (event, newValue) => {
+    //       setSliderOutput(newValue); 
+    //       //setDataSend(newValue);
+    //   };
+    //   // } slider end
+    
+    //   if (isLoading) {
+    //     return "loading";
+    //   }
   
   
   
@@ -148,12 +294,33 @@ const mapbox_access_token='pk.eyJ1IjoiamNtMTAiLCJhIjoiY2wyOTcyNjJsMGY5dTNwbjdscn
       value,
       setValue,
       label,
-      object,handleChange
+      object,
+      //handleChange,
+      //slider
+      // isLoading, setLoading,
+      // range, setRange,
+      // sliderOutput, setSliderOutput,
+      // handleCommittedChange,
+      // handleSliderChange
+
+      //script
+      renderTree,options
 
     }}
   >
+      <Grid container  sx={{display:'flex', flexDirection:'row'}}>
+      <Grid item xs={8}>
+        <h1>Dropdown</h1>
+        <Dropdown/>
+      </Grid>
+        <Grid item xs={4}>
+        <h1>Autocomplete/Slider</h1>
+          <Auto/>
+          {/* <SliderComponent/> */}
+        </Grid>
+      </Grid>
 
-      <Dropdown/>
+      <Main/>
  
     </AppContext.Provider>
   );

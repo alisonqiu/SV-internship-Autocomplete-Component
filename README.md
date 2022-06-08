@@ -1,6 +1,9 @@
+This is filter team's repo
+
 # Getting started 
 `npm i && npm start`
 
+**Ignore everything below lol**
 # Issues and how I fixed them
 1. defining and using async functions in useEffect
 
@@ -40,4 +43,6 @@ solution: If you want to perform an action on state update, you need to use the 
 - [x]  allow multi select 
 - [?] change the display of text fields 
 - [x] Get human-readable labels from an options call piped into variable-selection dropdowns
+- [ ] We need component factories — given a variable name, we should be able to make search components that are fit to the data type and will add parameters to the search object.
+- [ ]  And we need to figure out how we are going from variable selection (cascading menus?) to filter component usage and display (like a range slider).
 - [ ] clean up my code and use more appropriate var names 😂

@@ -8,16 +8,10 @@ import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
 import axios, { Axios } from 'axios';
 import {
-  Container,
-  Slider,
-  Button,
   Checkbox,
-  FormControlLabel,
   ListItem,
   Grid,
-  List,
   ListItemText,
-  Card, CardContent, CardHeader, Box, Paper, Chip, TextField
 } from '@mui/material';
 import {TreeView, TreeItem} from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
@@ -33,8 +27,12 @@ function App() {
   const [textInput, setTestInput] = React.useState("");
   const [dropdownOptions, setDropdownOptions] = React.useState([]);
   const [value, setValue] = React.useState([]);
-  const [label, setLabel] = React.useState([]);
-  const [object, setObject] = React.useState([]);
+  const [label, setLabel] = React.useState(autocomplete_text_fields[0]);
+  const [displayAuto,setDisplayAuto]= React.useState(false);
+  const [displaySlider,setDisplaySlider]= React.useState(false);
+  const [type,setType]  = React.useState("default type");
+  console.log("type:",type)
+
 
   const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
 }
@@ -44,90 +42,100 @@ const base_url = "https://voyages3-api.crc.rice.edu/"
 const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5f"}
       //******************************* The function to get all autocomplete labels*/
     
-      const optionCall = async () => {
-        var myHeaders = new Headers();
-          myHeaders.append("Authorization", "Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260");
+      // const optionCall = async () => {
+      //   var myHeaders = new Headers();
+      //     myHeaders.append("Authorization", "Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260");
   
-          var formdata = new FormData();
-          formdata.append("voyage_dates__date_departed_africa", "");
+      //     var formdata = new FormData();
+      //     formdata.append("", "");
   
-          var requestOptions = {
-            method: 'OPTIONS',
-            headers: myHeaders,
-            body: formdata,
-            redirect: 'follow'
-          };
+      //     var requestOptions = {
+      //       method: 'OPTIONS',
+      //       headers: myHeaders,
+      //       body: formdata,
+      //       redirect: 'follow'
+      //     };
   
-          fetch("https://voyages3-api.crc.rice.edu/voyage/?hierarchical=False", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-              console.log('666666666666',result)
-              var array_result = []
+      //     fetch("https://voyages3-api.crc.rice.edu/voyage/?hierarchical=False", requestOptions)
+      //       .then(response => response.json())
+      //       .then(result => {
+      //         //console.log('666666666666',result)
+      //         var array_result = []
               
-              for(var i in result){
-                array_result.push([i,result[i]])
-              }
-              console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
-              // Array(2)
-              //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
-              //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
-              // length: 2
+      //         for(var i in result){
+      //           array_result.push([i,result[i]])
+      //         }
+      //         //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
+      //         // Array(2)
+      //         //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
+      //         //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
+      //         // length: 2
   
-              // const flatlabels =  array_result.map((obj) => ({
-              //             flatlabel: obj[1].flatlabel
-              //           }))
-              // console.log("😇 ~ file: Dropdown.js ~ line 102 ~ flatlabels ~ flatlabels", flatlabels)
-              //         }
+      //         // const flatlabels =  array_result.map((obj) => ({
+      //         //             flatlabel: obj[1].flatlabel
+      //         //           }))
+      //         // console.log("😇 ~ file: Dropdown.js ~ line 102 ~ flatlabels ~ flatlabels", flatlabels)
+      //         //         }
               
-              const pokemon = array_result.map((obj) => ({
-                name: obj[0],
-                type: obj[1].type,
-                label: obj[1].label,
-                flatlabel: obj[1].flatlabel,
-              }))
-              console.log("🚀 ~ file: Dropdown.js ~ line 85 ~ pokemon ~ pokemon", pokemon)
-              //{name: 'voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent', type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
+      //         const pokemon = array_result.map((obj) => ({
+      //           name: obj[0],
+      //           type: obj[1].type,
+      //           label: obj[1].label,
+      //           flatlabel: obj[1].flatlabel,
+      //         }))
+      //         //console.log("🚀 ~ file: Dropdown.js ~ line 85 ~ pokemon ~ pokemon", pokemon)
+      //         //{name: 'voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent', type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
   
   
-              // const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
-              // console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
-              // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
-              // 1: {name: 'voyage_itinerary__port_of_departure__geo_location__parent_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Geographic Location : Location name'}
-              // 2:
+      //         // const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
+      //         // console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
+      //         // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
+      //         // 1: {name: 'voyage_itinerary__port_of_departure__geo_location__parent_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Geographic Location : Location name'}
+      //         // 2:
   
-              var flatlabels = []
-              var objects = []
+      //         var flatlabels = []
+      //         var objects = []
               
-              for(var i in pokemon){
-                flatlabels.push(pokemon[i]['flatlabel'])
-                if (autocomplete_text_fields.includes(pokemon[i]['name'])){
-                  objects.push(pokemon[i])
-                }
-              }
-              console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ objects", objects)
-              //3: {name: 'voyage_itinerary__port_of_departure', type: 'table', label: 'Port of departure (PORTDEP)', flatlabel: 'Itinerary : Port of departure (PORTDEP)'}
-              //4: {name: 'voyage_itinerary__port_of_departure__id', type: "<class 'rest_framework.fields.IntegerField'>", label: 'ID', flatlabel: 'Itinerary : Port of departure (PORTDEP) : ID'}
+      //         for(var i in pokemon){
+      //           flatlabels.push(pokemon[i]['flatlabel'])
+      //           if (autocomplete_text_fields.includes(pokemon[i]['name'])){
+      //             objects.push(pokemon[i])
+      //           }
+      //         }
+      //         //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ objects", objects)
+      //         //3: {name: 'voyage_itinerary__port_of_departure', type: 'table', label: 'Port of departure (PORTDEP)', flatlabel: 'Itinerary : Port of departure (PORTDEP)'}
+      //         //4: {name: 'voyage_itinerary__port_of_departure__id', type: "<class 'rest_framework.fields.IntegerField'>", label: 'ID', flatlabel: 'Itinerary : Port of departure (PORTDEP) : ID'}
 
-              setLabel(flatlabels)
-              setObject(objects)
-              })
+      //         setLabel(flatlabels)
+      //         setObject(objects)
+      //         })
   
-            .catch(error => console.log('error', error));
-       }
-       React.useEffect(()=> {
-        optionCall()}, []);
+      //       .catch(error => console.log('error', error));
+      //  }
+      //  React.useEffect(()=> {
+      //   optionCall()}, []);
      
       //**************************************** */
 
       //😁 from Dropdown (originally Script)
-      const [labels, setLabels] = React.useState([]);
-      // var data = "init value";
+      const { isLoading, error, data: options } = useQuery('repoData', () => {
+        return fetch(base_url + "voyage/", {
+            method: "OPTIONS",
+            headers: headers
+        }).then(res => res.json())
+    }
+)
+
+
 
       React.useEffect(()=>{
-        const fetchData = async (labels,textInput) => {
+        console.log('use effect fetch dropdown options')
+        const fetchData = async (label,textInput) => {
+          console.log(label)
           var formdata = new FormData();
-          formdata.append(labels, textInput);
-          console.log("🚀 ~ labels[0], textInput", labels,labels[0], textInput)
+          formdata.append(label, textInput);
+
+          console.log("🚀 ~ label, textInput", label, textInput)
           var requestOptions = {
               method: 'POST',
               headers: header,
@@ -138,24 +146,32 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
           .then(response => response.json())
           .then(result => {
               console.log("🚀YAYAYAY fetch is successful!!! result", result)
-              var newOptions = result[labels]
+              var newOptions = result[label]
               console.log("🚀 ~ file: Dropdown.js ~ line 43 ~ fetchData ~ newOptions", newOptions)
               setDropdownOptions(newOptions) })
         }
   
-        fetchData(labels[labels.length-1],textInput).catch(console.error)
-      },[labels,textInput])
+        fetchData(label,textInput).catch(console.error)
+      },[label,textInput])
 
 
+      React.useEffect(()=> {
+        const changeDisplay = (type)=>{
+        console.log("🚀 ~ file: App.jsx ~ line 151 ~ changeDisplay ~ type", typeof(type))
+        if(true){
+          setDisplayAuto(true)
+          setDisplaySlider(false)
+        } else if (type.includes('Integer')){
+          setDisplayAuto(false)
+          setDisplaySlider(true)
+        }else{
+          setDisplayAuto(false)
+          setDisplaySlider(false)
+        }}
+        changeDisplay(type)
+      }, [type]);
 
-      const { isLoading, error, data: options } = useQuery('repoData', () => {
-              return fetch(base_url + "voyage/", {
-                  method: "OPTIONS",
-                  headers: headers
-              }).then(res => res.json())
-          }
-      )
-  
+
       function isChildren(key) {
           return key !== "type" && key !== "label" && key !== "flatlabel"
       }
@@ -172,8 +188,9 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
                   isChildren(key)
                       ? isLast(nodes[key])
                           ? <ListItem key={key} disablePadding>
-                              <Checkbox  onChange={(event, checked) => handleCheck(checked, name ? (name.slice(2)+"__"+key) : key)}/>
-                              <ListItemText primary={key+" ("+nodes[key].flatlabel+")"} secondary={nodes[key].type}/>
+                              <Checkbox  onChange={(event, checked) => {
+                                handleCheck(checked, key,name ? (name.slice(2)+"__"+key) : key)}}/>
+                              <ListItemText primary={nodes[key].flatlabel.split(":")[nodes[key].flatlabel.split(":").length-1]} secondary={nodes[key].type}/>
                           </ListItem>
                           : renderTree(nodes[key], name+"__"+key)
                       : null
@@ -183,13 +200,17 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
      
   };
   
-      function handleCheck(isChecked, label){
+      function handleCheck(isChecked, key, label){
+        console.log("!!!!!options:",options,"key: ",key,"label: ",label)
           if (isChecked) {
-              setLabels([...labels, label])
-          }else{
-              setLabels(labels.filter((i) => i !== label))
+              setLabel(label)
           }
-          console.log("💙label ",labels)
+          // }else{
+          //     console.log("else, labels: ",labels)
+          //     setLabels(labels.filter((i) => i !== label))
+          // }
+          console.log("💙label ",label, "options: ",options)
+          setType(options[label])
       }
   
   
@@ -228,56 +249,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
    
     // };
 
-    //😀from slider
-    // var d = new FormData();
-    // d.append('aggregate_fields', ["voyage_slaves_numbers__imp_total_num_slaves_disembarked"]);
-
-    // const config =  {
-    //   method: 'post',
-    //   baseURL: 'https://voyages3-api.crc.rice.edu/voyage/aggregations',
-    //   headers: {'Authorization': 'Token 1bd7b6a695d87fb17a752fdcf58cc98c28486dd1'},
-    //   data:d
-    // }
-
-    // const [isLoading, setLoading] = React.useState(true);
-    // const [range, setRange] = React.useState([0,0]);
-    // const [sliderOutput, setSliderOutput] = React.useState([0,0]);
-
-    // React.useEffect(() => {
-    //     axios(config).then(res => {
-    //       console.log("begin", [Object.values(res.data)[0]["min"], Object.values(res.data)[0]["max"]])
-
-    //       var s = Object.values(res.data)[0]["min"]
-    //       var e = Object.values(res.data)[0]["max"]
-    
-    //       setRange([s,e])
-    //       console.log("range", [s,e])
-    //       setSliderOutput([s,e])
-    //       // setValue([range[0], range[1]/2]);
-    //       setLoading(false);
-    //     });
-    //     console.log("useEffect")
-    //   }, []);
-    //   // slider {
-      
-    //   // console.log(range)
-      
-    
-    //   function handleCommittedChange() {
-    //     console.log("onchange", sliderOutput);
-    //     //console.log("dataSend", dataSend);
-    //   }
-      
-    //   const handleSliderChange = (event, newValue) => {
-    //       setSliderOutput(newValue); 
-    //       //setDataSend(newValue);
-    //   };
-    //   // } slider end
-    
-    //   if (isLoading) {
-    //     return "loading";
-    //   }
-  
   
   
   
@@ -293,8 +264,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       setDropdownOptions,
       value,
       setValue,
-      label,
-      object,
       //handleChange,
       //slider
       // isLoading, setLoading,
@@ -315,8 +284,8 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       </Grid>
         <Grid item xs={4}>
         <h1>Autocomplete/Slider</h1>
-          <Auto/>
-          {/* <SliderComponent/> */}
+          {displayAuto? <Auto/>:""}
+          {displaySlider?<SliderComponent/>:""}
         </Grid>
       </Grid>
 

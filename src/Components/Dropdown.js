@@ -23,7 +23,7 @@ function Dropdown() {
 
     const { renderTree,options} = React.useContext(AppContext)
 
-
+    console.log(options)
 
     return (
         <Container>
@@ -38,7 +38,9 @@ function Dropdown() {
                                 defaultCollapseIcon={<ExpandMoreIcon/>}
                                 defaultExpandIcon={<ChevronRightIcon/>}
                             >
-                                {renderTree(options, "")}
+                                {
+                                    
+                                renderTree(options, "")}
                             </TreeView>
                         </CardContent>
                     </Card>

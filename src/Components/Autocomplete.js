@@ -4,10 +4,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { AppContext } from "../App";
 
 
-
-
-
-
 export default function Auto() {
  const { 
     setTestInput,
@@ -15,10 +11,8 @@ export default function Auto() {
     value,
     setValue} = React.useContext(AppContext)
 
-
-
+    console.log("DROPDOWN OPTION: ", dropdownOptions)
   return (
-  
 
     <Autocomplete
       disablePortal

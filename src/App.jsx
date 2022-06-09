@@ -7,6 +7,7 @@ import Dropdown from './Components/Dropdown';
 import Menu from './Components/Menu'
 import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
+import { Menu, MenuItem} from "@material-ui/core";
 import axios, { Axios } from 'axios';
 import {
   Checkbox,
@@ -18,6 +19,8 @@ import {TreeView, TreeItem} from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
 import ChevronRightIcon from '@mui/icons-material/ArrowRightAlt';
 import { useQuery } from 'react-query'
+
+import NestedMenuItem from "material-ui-nested-menu-item";
 
 
 export const AppContext = React.createContext();
@@ -32,7 +35,11 @@ function App() {
   const [displayAuto,setDisplayAuto]= React.useState(false);
   const [displaySlider,setDisplaySlider]= React.useState(false);
   const [type,setType]  = React.useState("default type");
-  const [name_to_type,setNametotype] = React.useState(null);
+
+  const [labels, setLabels] = React.useState([]);
+  const [option, setOption] = React.useState('');
+  const [menuPosition, setMenuPosition] = React.useState(null);
+
   console.log("type:",type)
 
 
@@ -131,13 +138,12 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
 )
 
 
-
       React.useEffect(()=>{
         console.log('use effect fetch dropdown options')
-        const fetchData = async (label,textInput) => {
-          console.log(label)
+        const fetchData = async (labels,textInput) => {
+          console.log("Labels.option: ----->", labels.option)
           var formdata = new FormData();
-          formdata.append(label, textInput);
+          formdata.append(labels.option, textInput);
 
           console.log("🚀 ~ label, textInput", label, textInput)
           var requestOptions = {
@@ -150,13 +156,13 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
           .then(response => response.json())
           .then(result => {
               console.log("🚀YAYAYAY fetch is successful!!! result", result)
-              var newOptions = result[label]
+              var newOptions = result[labels.option]
               console.log("🚀 ~ file: Dropdown.js ~ line 43 ~ fetchData ~ newOptions", newOptions)
               setDropdownOptions(newOptions) })
         }
   
-        fetchData(label,textInput).catch(console.error)
-      },[label,textInput])
+        fetchData(labels[labels.length-1],textInput).catch(console.error)
+      },[labels,textInput])
 
 
       React.useEffect(()=> {
@@ -175,6 +181,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
         changeDisplay(label)
       }, [label]);
 
+      if (isLoading) return 'Loading...'
 
       function isChildren(key) {
           return key !== "type" && key !== "label" && key !== "flatlabel"
@@ -183,27 +190,55 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       function isLast(node) {
           return Object.keys(node).length <= 3
       }
+
   
       var count = 0;
       const renderTree = (nodes, name) => {
           //console.log("🚀 ~ file: Script.js ~ line 54 ~ Script ~ nodes", nodes)
-          return <TreeItem key={nodes.label} nodeId={""+count++} label={nodes.label? nodes.label:"Menu"}>
-              { Object.keys(nodes).map((key) =>
+          return (
+          // <TreeItem key={nodes.label} nodeId={""+count++} label={nodes.label? nodes.label:"Menu"}>
+               Object.keys(nodes).map((key) =>
                   isChildren(key)
                       ? isLast(nodes[key])
-                          ? <ListItem key={key} disablePadding>
-                              <Checkbox  onChange={(event, checked) => {
-                                handleCheck(checked, key,name ? (name.slice(2)+"__"+key) : key)}}/>
-                              <ListItemText primary={nodes[key].flatlabel.split(":")[nodes[key].flatlabel.split(":").length-1]} secondary={nodes[key].type}/>
-                          </ListItem>
-                          : renderTree(nodes[key], name+"__"+key)
+                          ? <MenuItem value={nodes[key].flatlabel} key={key} onClick={() => {handleOptionClick(name.slice(2)+"__"+key, nodes[key].type) }}>
+                              {nodes[key].label}  
+                          </MenuItem>
+                          : <NestedMenuItem
+                              label={nodes[key].label}
+                              parentMenuOpen={!!menuPosition}
+                              onClick={handleItemClick}
+                              value={nodes[key].flatlabel}
+                              > 
+                              {renderTree(nodes[key], name+"__"+key)}
+                          </NestedMenuItem>
                       : null
               )
-              }
-          </TreeItem>
+              )
+          // </TreeItem>
      
   };
-  
+    const handleItemClick = (click) => {
+      setMenuPosition(null);
+    };
+
+    const handleOptionClick = (option, type) => {
+      setMenuPosition(null);
+      setOption(option);
+      setLabels([...labels, {option:option, type:type}])
+    }
+
+    const handleLeftClick = (event) => {
+      if (menuPosition) {
+        return;
+      }
+      event.preventDefault();
+      setMenuPosition({
+        top: event.pageY,
+        left: event.pageX
+      });
+    };
+
+
       function handleCheck(isChecked, key, label){
         console.log("!!!!!options:",options,"key: ",key,"label: ",label)
           if (isChecked) {
@@ -218,7 +253,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       }
   
   
-      if (isLoading) return 'Loading...'
+
   
       if (error) return 'An error has occurred: ' + error.message
   
@@ -277,7 +312,12 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       // handleSliderChange
 
       //script
-      renderTree,options
+      renderTree,
+      options,
+      menuPosition, 
+      setMenuPosition,
+      handleLeftClick,
+      isLoading
 
     }}
   >

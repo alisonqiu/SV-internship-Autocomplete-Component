@@ -229,7 +229,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       // name***type***flatlabel  
       var out = option + "***" + type + "***" + flatlabel;
       console.log("OUTPUT STRING: ----->", out)
-      setOutput([...output, out])
+      setOutput([...output, out])                             // THIS IS THE OUTPUT AFTER USER SELECTS IN MENU
       console.log("OUTPUT STRING ARRAY: ----->",output)
     }
 

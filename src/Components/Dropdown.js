@@ -8,7 +8,7 @@ import {
     Grid,
     List,
     ListItemText,
-    Card, CardContent, CardHeader, Box, Paper, Chip, TextField
+    Card, CardContent, CardHeader, Box, Paper, Chip, TextField, Menu
 } from '@mui/material';
 import {TreeView, TreeItem} from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
@@ -21,9 +21,11 @@ import { AppContext } from "../App";
 
 function Dropdown() {
 
-    const { renderTree,options} = React.useContext(AppContext)
+    const {renderTree,options,menuPosition, setMenuPosition, handleLeftClick, isLoading} = React.useContext(AppContext)
 
     console.log(options)
+
+    if (isLoading) return 'Loading...'
 
     return (
         <Container>
@@ -38,9 +40,21 @@ function Dropdown() {
                                 defaultCollapseIcon={<ExpandMoreIcon/>}
                                 defaultExpandIcon={<ChevronRightIcon/>}
                             >
-                                {
-                                    
-                                renderTree(options, "")}
+                                <Button
+                                    variant="contained"
+                                    onClick={handleLeftClick}
+                                    >
+                                    New Filter
+                                </Button>
+                                <Menu
+                                    open={!!menuPosition}
+                                    onClose={() => setMenuPosition(null)}
+                                    anchorReference="anchorPosition"
+                                    anchorPosition={menuPosition}
+                                >
+                                    {renderTree(options, "")}
+                                </Menu>
+                                
                             </TreeView>
                         </CardContent>
                     </Card>

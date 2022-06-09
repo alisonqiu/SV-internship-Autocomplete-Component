@@ -4,6 +4,7 @@ import {autocomplete_text_fields, obj_autocomplete_text_fields} from './Componen
 //import Dropdown from './Components/Dropdown_old';
 import Main from './Components/Main';
 import Dropdown from './Components/Dropdown';
+import Menu from './Components/Menu'
 import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
 import axios, { Axios } from 'axios';
@@ -31,6 +32,7 @@ function App() {
   const [displayAuto,setDisplayAuto]= React.useState(false);
   const [displaySlider,setDisplaySlider]= React.useState(false);
   const [type,setType]  = React.useState("default type");
+  const [name_to_type,setNametotype] = React.useState(null);
   console.log("type:",type)
 
 
@@ -42,78 +44,80 @@ const base_url = "https://voyages3-api.crc.rice.edu/"
 const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5f"}
       //******************************* The function to get all autocomplete labels*/
     
-      // const optionCall = async () => {
-      //   var myHeaders = new Headers();
-      //     myHeaders.append("Authorization", "Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260");
+      const optionCall = async () => {
+        var myHeaders = new Headers();
+          myHeaders.append("Authorization", "Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260");
   
-      //     var formdata = new FormData();
-      //     formdata.append("", "");
+          var formdata = new FormData();
+          formdata.append("", "");
   
-      //     var requestOptions = {
-      //       method: 'OPTIONS',
-      //       headers: myHeaders,
-      //       body: formdata,
-      //       redirect: 'follow'
-      //     };
+          var requestOptions = {
+            method: 'OPTIONS',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+          };
   
-      //     fetch("https://voyages3-api.crc.rice.edu/voyage/?hierarchical=False", requestOptions)
-      //       .then(response => response.json())
-      //       .then(result => {
-      //         //console.log('666666666666',result)
-      //         var array_result = []
+          fetch("https://voyages3-api.crc.rice.edu/voyage/?hierarchical=False", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              //console.log('666666666666',result)
+              var array_result = []
               
-      //         for(var i in result){
-      //           array_result.push([i,result[i]])
-      //         }
-      //         //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
-      //         // Array(2)
-      //         //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
-      //         //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
-      //         // length: 2
+              for(var i in result){
+                array_result.push([i,result[i]])
+              }
+              //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
+              // Array(2)
+              //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
+              //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
+              // length: 2
   
-      //         // const flatlabels =  array_result.map((obj) => ({
-      //         //             flatlabel: obj[1].flatlabel
-      //         //           }))
-      //         // console.log("😇 ~ file: Dropdown.js ~ line 102 ~ flatlabels ~ flatlabels", flatlabels)
-      //         //         }
+              // const flatlabels =  array_result.map((obj) => ({
+              //             flatlabel: obj[1].flatlabel
+              //           }))
+              // console.log("😇 ~ file: Dropdown.js ~ line 102 ~ flatlabels ~ flatlabels", flatlabels)
+              //         }
               
-      //         const pokemon = array_result.map((obj) => ({
-      //           name: obj[0],
-      //           type: obj[1].type,
-      //           label: obj[1].label,
-      //           flatlabel: obj[1].flatlabel,
-      //         }))
-      //         //console.log("🚀 ~ file: Dropdown.js ~ line 85 ~ pokemon ~ pokemon", pokemon)
-      //         //{name: 'voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent', type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
+              const pokemon = array_result.map((obj) => ({
+                name: obj[0],
+                type: obj[1].type,
+                label: obj[1].label,
+                flatlabel: obj[1].flatlabel,
+              }))
+              //console.log("🚀 ~ file: Dropdown.js ~ line 85 ~ pokemon ~ pokemon", pokemon)
+              //{name: 'voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent', type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
+              const map =  array_result.map((obj) => ({
+                [obj[0]]:obj[1].type
+              }))
+              setNametotype(map)
+              // const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
+              // console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
+              // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
+              // 1: {name: 'voyage_itinerary__port_of_departure__geo_location__parent_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Geographic Location : Location name'}
+              // 2:
   
-  
-      //         // const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
-      //         // console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
-      //         // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
-      //         // 1: {name: 'voyage_itinerary__port_of_departure__geo_location__parent_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Geographic Location : Location name'}
-      //         // 2:
-  
-      //         var flatlabels = []
-      //         var objects = []
+              var flatlabels = []
+              var objects = []
               
-      //         for(var i in pokemon){
-      //           flatlabels.push(pokemon[i]['flatlabel'])
-      //           if (autocomplete_text_fields.includes(pokemon[i]['name'])){
-      //             objects.push(pokemon[i])
-      //           }
-      //         }
-      //         //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ objects", objects)
-      //         //3: {name: 'voyage_itinerary__port_of_departure', type: 'table', label: 'Port of departure (PORTDEP)', flatlabel: 'Itinerary : Port of departure (PORTDEP)'}
-      //         //4: {name: 'voyage_itinerary__port_of_departure__id', type: "<class 'rest_framework.fields.IntegerField'>", label: 'ID', flatlabel: 'Itinerary : Port of departure (PORTDEP) : ID'}
+              for(var i in pokemon){
+                flatlabels.push(pokemon[i]['flatlabel'])
+                if (autocomplete_text_fields.includes(pokemon[i]['name'])){
+                  objects.push(pokemon[i])
+                }
+              }
+              //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ objects", objects)
+              //3: {name: 'voyage_itinerary__port_of_departure', type: 'table', label: 'Port of departure (PORTDEP)', flatlabel: 'Itinerary : Port of departure (PORTDEP)'}
+              //4: {name: 'voyage_itinerary__port_of_departure__id', type: "<class 'rest_framework.fields.IntegerField'>", label: 'ID', flatlabel: 'Itinerary : Port of departure (PORTDEP) : ID'}
 
-      //         setLabel(flatlabels)
-      //         setObject(objects)
-      //         })
+              // setLabel(flatlabels)
+              // setObject(objects)
+              })
   
-      //       .catch(error => console.log('error', error));
-      //  }
-      //  React.useEffect(()=> {
-      //   optionCall()}, []);
+            .catch(error => console.log('error', error));
+       }
+       React.useEffect(()=> {
+        optionCall()}, []);
      
       //**************************************** */
 
@@ -156,9 +160,9 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
 
 
       React.useEffect(()=> {
-        const changeDisplay = (type)=>{
-        console.log("🚀 ~ file: App.jsx ~ line 151 ~ changeDisplay ~ type", typeof(type))
-        if(true){
+        const changeDisplay = (label)=>{
+        console.log("🚀 ~ file: App.jsx ~ line 151 ~ changeDisplay ~ label", label)
+        if(type.includes('char')){
           setDisplayAuto(true)
           setDisplaySlider(false)
         } else if (type.includes('Integer')){
@@ -168,8 +172,8 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
           setDisplayAuto(false)
           setDisplaySlider(false)
         }}
-        changeDisplay(type)
-      }, [type]);
+        changeDisplay(label)
+      }, [label]);
 
 
       function isChildren(key) {
@@ -279,6 +283,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
   >
       <Grid container  sx={{display:'flex', flexDirection:'row'}}>
       <Grid item xs={8}>
+        <Menu/>
         <h1>Dropdown</h1>
         <Dropdown/>
       </Grid>

@@ -2,6 +2,7 @@ import './App.css';
 import axios, { Axios } from 'axios';
 import { Component } from 'react';
 import { render } from '@testing-library/react';
+import Auto from './Components/Autocomplete';
 import * as React from 'react';
 import {
   Typography,
@@ -39,7 +40,7 @@ function ComponentFac(props){
     case "BooleanField":
       return <Chip label={modifyName(varDisplay)} color="primary" />;
     case "CharField":
-      return <Chip label={modifyName(varDisplay)} color="primary" />;
+      return GetAuto();
     default:
       return <Chip label="NA" color="primary" />;
   }
@@ -106,8 +107,9 @@ function GetSlider(varName, varDisplay) {
          );
 }
 
-function GetAcuto(){
-  
+function GetAuto(){
+  console.log('get auto')
+  return <Auto/>
 }
 
 function GetCheck(props){

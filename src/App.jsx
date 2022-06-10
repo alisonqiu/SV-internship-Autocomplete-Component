@@ -22,8 +22,6 @@ import { useQuery } from 'react-query'
 import NestedMenuItem from "material-ui-nested-menu-item";
 import ComponentFac from './ComponentFac';
 
-import ComponentFac from './ComponentFac'
-
 import {base_url, headers} from './status'
 
 export const AppContext = React.createContext();
@@ -35,8 +33,6 @@ function App() {
   const [dropdownOptions, setDropdownOptions] = React.useState([]);
   const [value, setValue] = React.useState([]);
   const [label, setLabel] = React.useState(autocomplete_text_fields[0]);
-  const [displayAuto,setDisplayAuto]= React.useState(false);
-  const [displaySlider,setDisplaySlider]= React.useState(false);
   const [type,setType]  = React.useState("default type");
 
   const [labels, setLabels] = React.useState([]);
@@ -145,7 +141,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       React.useEffect(()=>{
         console.log('use effect fetch dropdown options')
         const fetchData = async (labels,textInput) => {
-          // console.log("Labels.option: ----->", labels.option)
+          console.log("Labels.option: ----->", labels.option)
           var formdata = new FormData();
           formdata.append(labels.option, textInput);
 
@@ -169,21 +165,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       },[labels,textInput])
 
 
-      React.useEffect(()=> {
-        const changeDisplay = (label)=>{
-        console.log("🚀 ~ file: App.jsx ~ line 151 ~ changeDisplay ~ label", label)
-        if(false){
-          setDisplayAuto(true)
-          setDisplaySlider(false)
-        } else if (type.includes('Integer')){
-          setDisplayAuto(false)
-          setDisplaySlider(true)
-        }else{
-          setDisplayAuto(false)
-          setDisplaySlider(false)
-        }}
-        changeDisplay(label)
-      }, [label]);
 
       if (isLoading) return 'Loading...'
 

@@ -4,7 +4,6 @@ import {autocomplete_text_fields, obj_autocomplete_text_fields} from './Componen
 //import Dropdown from './Components/Dropdown_old';
 import Main from './Components/Main';
 import Dropdown from './Components/Dropdown';
-import Menu from './Components/Menu'
 import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
 import { Menu, MenuItem} from "@material-ui/core";
@@ -21,6 +20,7 @@ import ChevronRightIcon from '@mui/icons-material/ArrowRightAlt';
 import { useQuery } from 'react-query'
 
 import NestedMenuItem from "material-ui-nested-menu-item";
+import ComponentFac from './ComponentFac';
 
 
 export const AppContext = React.createContext();
@@ -97,7 +97,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
               const map =  array_result.map((obj) => ({
                 [obj[0]]:obj[1].type
               }))
-              setNametotype(map)
+
               // const filteredPokemonsByType= pokemon.filter(x=>x.type==="<class 'rest_framework.fields.CharField'>");
               // console.log("🚀 ~ filteredPokemonsByType", filteredPokemonsByType)
               // 0: {name: 'voyage_itinerary__port_of_departure__geo_location__child_of__name', type: "<class 'rest_framework.fields.CharField'>", label: 'Location name', flatlabel: 'Itinerary : Port of departure (PORTDEP) : Location : Child of : Location name'}
@@ -168,7 +168,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       React.useEffect(()=> {
         const changeDisplay = (label)=>{
         console.log("🚀 ~ file: App.jsx ~ line 151 ~ changeDisplay ~ label", label)
-        if(type.includes('char')){
+        if(false){
           setDisplayAuto(true)
           setDisplaySlider(false)
         } else if (type.includes('Integer')){
@@ -329,8 +329,10 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       </Grid>
         <Grid item xs={4}>
         <h1>Autocomplete/Slider</h1>
-          {displayAuto? <Auto/>:""}
-          {displaySlider?<SliderComponent/>:""}
+          {/* {displayAuto? <Auto/>:""}
+          {displaySlider?<SliderComponent/>:""} */}
+          <Auto/>
+          <SliderComponent/>
         </Grid>
       </Grid>
 

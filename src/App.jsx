@@ -9,16 +9,16 @@ import Cascading from './Components/Cascading'
 
 import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
-import { Menu, MenuItem} from "@material-ui/core";
+import { Menu, MenuItem, Accordion, AccordionSummary, AccordionDetails, Typography } from "@material-ui/core";
 import axios, { Axios } from 'axios';
 import {
-  Checkbox,
-  ListItem,
   Grid,
-  ListItemText,
+  Card,
+  CardContent
 } from '@mui/material';
 import {TreeView, TreeItem} from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
+import FilterAlt from '@mui/icons-material/FilterAlt';
 import ChevronRightIcon from '@mui/icons-material/ArrowRightAlt';
 import { useQuery } from 'react-query'
 
@@ -250,40 +250,37 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
 
     }}
   >
-      <Grid container  sx={{display:'flex', flexDirection:'row'}}>
-      <Grid item xs={8}>
-        <h1>Dropdown</h1>
-        
-        <Cascading />
+    
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<FilterAlt />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Filter</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container direction={'row'} spacing={2} alignItems="center" justify = "center">
+            <Grid item xs={4} >
+              <Dropdown/>
+            </Grid>
+            <Grid item xs={8}>
+              <Card>
+              {output.map((item) => {
+                return(
+                  <Grid margin={3} >
+                    <Grid item>
+                      <ComponentFac params={item} />
+                    </Grid>
+                  </Grid>
+                )})
+              }
+              </Card>
+            </Grid>
+          </Grid>
+          </AccordionDetails>
+        </Accordion>
 
-        {/* <Dropdown /> */}
-      </Grid>
-      
-        <Grid item xs={4}>
-        {/* <h1>Autocomplete/Slider</h1>
-          {displayAuto? <Auto/>:""}
-          {displaySlider?<SliderComponent/>:""} */}
-
-            {/* <Grid  xs={12} padding={1}>
-              <item>
-                <ComponentFac params={output[0]} />
-              </item>
-            </Grid> */}
-
-          {output.map((item) => {
-
-            {console.log("ITEM---->", item)}
-            return(
-              <Grid  xs={12} padding={1}>
-                <item>
-                  <ComponentFac params={item} />
-                </item>
-              </Grid>
-            )
-            })
-          }
-        </Grid>
-      </Grid>
       <Main/>
     </AppContext.Provider>
   );

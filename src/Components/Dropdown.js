@@ -23,14 +23,14 @@ function Dropdown() {
 
     const {renderTree,options,menuPosition, setMenuPosition, handleLeftClick, isLoading} = React.useContext(AppContext)
 
-    console.log(options)
+    console.log("OPTIONS: ----> ", options)
 
     if (isLoading) return 'Loading...'
 
+
+
     return (
         <Container>
-
-
             <Grid container >
                 <Grid item xs={12}>
                     <Card sx={{height: 500, flexGrow: 1, maxWidth: 800, overflowY: 'auto'}}>

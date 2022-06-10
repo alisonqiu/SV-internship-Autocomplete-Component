@@ -19,6 +19,9 @@ import {
 // import Request from './request';
 import { getValue } from '@testing-library/user-event/dist/utils';
 
+// import {useContext} from "react";
+// import {GlobalContext} from "../App";
+
 const demoLabel = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 // const baseURL = 'https://voyages3-api.crc.rice.edu/voyage/'
@@ -31,6 +34,7 @@ function ComponentFac(props){
   const varName = raw[0]
   const varType = raw[1].split('.').pop().slice(0, -2)
   
+
   console.log("Variable Name: ----> ", raw)
   
   switch(varType){
@@ -53,6 +57,9 @@ function modifyName(rawName){
 }
 
 function GetSlider(varName, varDisplay) {
+
+  // const {options_tree, options_flat, search_object, set_search_object} = useContext(GlobalContext);     // <--------- CONTEXT
+
 
     const [range, setRange] = React.useState([0,0])
     const [value, setValue] = React.useState([range[0]/2, range[1]/2])
@@ -102,6 +109,13 @@ function GetSlider(varName, varDisplay) {
             onChangeCommitted = {handleCommittedChange}
             valueLabelDisplay="on"
         />
+        {
+          // console.log("SLIDER VALUE: ----> ", varName, value[0], value[1]),
+          // set_search_object({                     // <---------- UPDATE SEARCH OBJECT
+          //   ...search_object,
+          //   varName: [value[0], value[1]]
+          // })
+        }
         </>
          );
 }

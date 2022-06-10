@@ -23,7 +23,7 @@ function Dropdown() {
 
     const {renderTree,options,menuPosition, setMenuPosition, handleLeftClick, isLoading} = React.useContext(AppContext)
 
-    console.log(options)
+    console.log("OPTIONS: ----> ", options)
 
     if (isLoading) return 'Loading...'
 

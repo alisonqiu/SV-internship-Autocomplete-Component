@@ -22,6 +22,9 @@ import { useQuery } from 'react-query'
 import NestedMenuItem from "material-ui-nested-menu-item";
 import ComponentFac from './ComponentFac';
 
+import ComponentFac from './ComponentFac'
+
+import {base_url, headers} from './status'
 
 export const AppContext = React.createContext();
 
@@ -37,11 +40,12 @@ function App() {
   const [type,setType]  = React.useState("default type");
 
   const [labels, setLabels] = React.useState([]);
+  const [output, setOutput] = React.useState([]);
+
   const [option, setOption] = React.useState('');
   const [menuPosition, setMenuPosition] = React.useState(null);
 
   console.log("type:",type)
-
 
   const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
 }
@@ -141,7 +145,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       React.useEffect(()=>{
         console.log('use effect fetch dropdown options')
         const fetchData = async (labels,textInput) => {
-          console.log("Labels.option: ----->", labels.option)
+          // console.log("Labels.option: ----->", labels.option)
           var formdata = new FormData();
           formdata.append(labels.option, textInput);
 
@@ -200,7 +204,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
                Object.keys(nodes).map((key) =>
                   isChildren(key)
                       ? isLast(nodes[key])
-                          ? <MenuItem value={nodes[key].flatlabel} key={key} onClick={() => {handleOptionClick(name.slice(2)+"__"+key, nodes[key].type) }}>
+                          ? <MenuItem value={nodes[key].flatlabel} key={key} onClick={() => {handleOptionClick(name.slice(2)+"__"+key, nodes[key].type, nodes[key].flatlabel) }}>
                               {nodes[key].label}  
                           </MenuItem>
                           : <NestedMenuItem
@@ -221,10 +225,15 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       setMenuPosition(null);
     };
 
-    const handleOptionClick = (option, type) => {
+    const handleOptionClick = (option, type, flatlabel) => {
       setMenuPosition(null);
       setOption(option);
-      setLabels([...labels, {option:option, type:type}])
+      setLabels([...labels, {option:option, type:type, label:flatlabel}])
+      // name***type***flatlabel  
+      var out = option + "***" + type + "***" + flatlabel;
+      console.log("OUTPUT STRING: ----->", out)
+      setOutput([...output, out])                             // THIS IS THE OUTPUT AFTER USER SELECTS IN MENU
+      console.log("OUTPUT STRING ARRAY: ----->",output)
     }
 
     const handleLeftClick = (event) => {
@@ -327,17 +336,33 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
         <h1>Dropdown</h1>
         <Dropdown/>
       </Grid>
+      
         <Grid item xs={4}>
-        <h1>Autocomplete/Slider</h1>
-          {/* {displayAuto? <Auto/>:""}
+        {/* <h1>Autocomplete/Slider</h1>
+          {displayAuto? <Auto/>:""}
           {displaySlider?<SliderComponent/>:""} */}
-          <Auto/>
-          <SliderComponent/>
+
+            {/* <Grid  xs={12} padding={1}>
+              <item>
+                <ComponentFac params={output[0]} />
+              </item>
+            </Grid> */}
+
+          {output.map((item) => {
+
+            {console.log("ITEM---->", item)}
+            return(
+              <Grid  xs={12} padding={1}>
+                <item>
+                  <ComponentFac params={item} />
+                </item>
+              </Grid>
+            )
+            })
+          }
         </Grid>
       </Grid>
-
       <Main/>
- 
     </AppContext.Provider>
   );
 }

@@ -223,6 +223,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
     };
 
     const handleOptionClick = (option, type, flatlabel) => {
+      if(option === "__id") option = "id"
       setMenuPosition(null);
       setOption(option);
       setLabels([...labels, {option:option, type:type, label:flatlabel}])

@@ -16,7 +16,7 @@ import {
   ListItemText,
   Card, CardContent, CardHeader, Box, Paper, Chip, TextField
 } from '@mui/material';
-import Request from './request';
+// import Request from './request';
 import { getValue } from '@testing-library/user-event/dist/utils';
 
 const demoLabel = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -30,6 +30,9 @@ function ComponentFac(props){
   const varDisplay = raw[2]
   const varName = raw[0]
   const varType = raw[1].split('.').pop().slice(0, -2)
+  
+  console.log("Variable Name: ----> ", raw)
+  
   switch(varType){
     case "IntegerField" || "DecimalField":
       return GetSlider(varName, varDisplay);

@@ -3,7 +3,7 @@ import './App.css';
 import {autocomplete_text_fields, obj_autocomplete_text_fields} from './Components/vars'
 //import Dropdown from './Components/Dropdown_old';
 import Main from './Components/Main';
-import Dropdown from './Components/Dropdown';
+//import Dropdown from './Components/Dropdown';
 
 import Cascading from './Components/Cascading'
 
@@ -49,7 +49,6 @@ function App() {
   const [option, setOption] = React.useState('');
   const [menuPosition, setMenuPosition] = React.useState(null);
 
-  console.log("type:",type)
 
   const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
 }
@@ -82,18 +81,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
               for(var i in result){
                 array_result.push([i,result[i]])
               }
-              //console.log("🚀 ~ file: Dropdown.js ~ line 74 ~ optionCall ~ array_result", array_result)
-              // Array(2)
-              //   0: "voyage_itinerary__int_second_port_emb__geo_location__child_of__spatial_extent"
-              //   1: {type: "<class 'rest_framework.relations.PrimaryKeyRelatedField'>", label: 'Polygon', flatlabel: 'Itinerary : Second intended port of embarkation (EMBPORT2) : Location : Child of : Polygon'}
-              // length: 2
-  
-              // const flatlabels =  array_result.map((obj) => ({
-              //             flatlabel: obj[1].flatlabel
-              //           }))
-              // console.log("😇 ~ file: Dropdown.js ~ line 102 ~ flatlabels ~ flatlabels", flatlabels)
-              //         }
-              
+
               const pokemon = array_result.map((obj) => ({
                 name: obj[0],
                 type: obj[1].type,
@@ -149,11 +137,11 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       React.useEffect(()=>{
         console.log('use effect fetch dropdown options')
         const fetchData = async (labels,textInput) => {
-          console.log("Labels.option: ----->", labels.option)
+          console.log("Labels: ----->", labels)
           var formdata = new FormData();
           formdata.append(labels.option, textInput);
 
-          console.log("🚀 ~ label, textInput", label, textInput)
+          console.log("🚀 ~ label, textInput", labels, textInput)
           var requestOptions = {
               method: 'POST',
               headers: header,
@@ -215,13 +203,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       setDropdownOptions,
       value,
       setValue,
-      //handleChange,
-      //slider
-      // isLoading, setLoading,
-      // range, setRange,
-      // sliderOutput, setSliderOutput,
-      // handleCommittedChange,
-      // handleSliderChange
 
       //script
       // renderTree,
@@ -230,7 +211,8 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       setMenuPosition,
       isLoading,
       setOutput,
-      output
+      output,
+      labels, setLabels
 
     }}
   >
@@ -246,7 +228,7 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
         <AccordionDetails>
           <Grid container direction={'row'} spacing={2} alignItems="center" justify = "center">
             <Grid item xs={4} >
-              <Dropdown/>
+             <Cascading/>
             </Grid>
             <Grid item xs={8}>
               <Card>

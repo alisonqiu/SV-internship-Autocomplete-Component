@@ -27,12 +27,12 @@ import {options_tree} from './test_option'
 function Cascading() {
 
     const [menuPosition, setMenuPosition] = React.useState(null);
-    const [labels, setLabels] = React.useState([]);
 
 
     const [option, setOption] = React.useState('');
 
-    const {setOutput, output} = React.useContext(AppContext)
+    const {setOutput, output, labels, setLabels} = React.useContext(AppContext)
+    //const {setOutput, output} = React.useContext(AppContext)
 
     // const {options_tree} = useContext(GlobalContext);     // <--------- CONTEXT
 
@@ -46,12 +46,15 @@ function Cascading() {
 
     const handleItemClick = (click) => {
         setMenuPosition(null);
+        console.log("🚀 ~ file: Cascading.js ~ line 50 ~ handleItemClick ~ handleItemClick")
       };
+    
   
     const handleOptionClick = (option, type, flatlabel) => {
         setMenuPosition(null);
         setOption(option);
         setLabels([...labels, {option:option, type:type, label:flatlabel}])
+        console.log("🚀 ~ file: Cascading.js ~ line 55 ~ handleOptionClick ~ labels", labels)
 
         var out = option + "***" + type + "***" + flatlabel;
         console.log("OUTPUT STRING: ----->", out)

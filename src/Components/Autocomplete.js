@@ -13,16 +13,19 @@ export default function Auto() {
     dropdownOptions,   
     value,
     setValue} = React.useContext(AppContext)
+   
+    console.log("🚀 ~ file: Autocomplete.js ~ line 16 ~ Auto ~ dropdownOptions, value,", dropdownOptions,   
+    value,)
 
 
   return (
-
+ <>
     <Autocomplete
       disablePortal
       autoHighlight
       multiple
       options={dropdownOptions}
-      value={dropdownOptions[0]}
+      //value={dropdownOptions[0]}
       onChange={(event, newValue) => {
         setValue(oldArray => [newValue][0]);
         console.log(value)
@@ -30,13 +33,14 @@ export default function Auto() {
       sx={{ width: 300 }}
       renderInput={(params) => {
         //params.inputProps.value is what i type in 
-        //console.log("🚀 ~ file: Dropdown.js ~ line 108 ~ Dropdown ~ params", params.InputProps)
+        console.log("🚀 ~ file: Dropdown.js ~ line 108 ~ Dropdown ~ params", dropdownOptions)
         setTestInput(params.inputProps.value)
-        console.log("AUTOCOMPLETE OUTPUT: -----> ", params)
         return <TextField {...params} label="field" />
          
     }}
     />
+    
+   </> 
 
   );
 }

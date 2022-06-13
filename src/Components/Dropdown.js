@@ -23,62 +23,36 @@ function Dropdown() {
 
     const {renderTree,options,menuPosition, setMenuPosition, handleLeftClick, isLoading} = React.useContext(AppContext)
 
-    console.log(options)
+    console.log("OPTIONS: ----> ", options)
 
     if (isLoading) return 'Loading...'
 
     return (
         <Container>
-
-
             <Grid container >
                 <Grid item xs={12}>
-                    <Card sx={{height: 500, flexGrow: 1, maxWidth: 800, overflowY: 'auto'}}>
-                        <CardContent>
-                            <TreeView
-                                aria-label="option menu"
-                                defaultCollapseIcon={<ExpandMoreIcon/>}
-                                defaultExpandIcon={<ChevronRightIcon/>}
+                    <TreeView
+                        aria-label="option menu"
+                        defaultCollapseIcon={<ExpandMoreIcon/>}
+                        defaultExpandIcon={<ChevronRightIcon/>}
+                    >
+                        <Button
+                            variant="contained"
+                            onClick={handleLeftClick}
                             >
-                                <Button
-                                    variant="contained"
-                                    onClick={handleLeftClick}
-                                    >
-                                    New Filter
-                                </Button>
-                                <Menu
-                                    open={!!menuPosition}
-                                    onClose={() => setMenuPosition(null)}
-                                    anchorReference="anchorPosition"
-                                    anchorPosition={menuPosition}
-                                >
-                                    {renderTree(options, "")}
-                                </Menu>
-                                
-                            </TreeView>
-                        </CardContent>
-                    </Card>
+                           Menu
+                        </Button>
+                        <Menu
+                            open={!!menuPosition}
+                            onClose={() => setMenuPosition(null)}
+                            anchorReference="anchorPosition"
+                            anchorPosition={menuPosition}
+                        >
+                            {renderTree(options, "")}
+                        </Menu>
+                    </TreeView>
                 </Grid>
-                {/* <Grid item xs={4}>
-                    <Card  sx={{ flexGrow: 1, height: 500, overflowY: 'auto'}}>
-                        <CardHeader
-                            title="Selected Options"
-                        />
-                        <CardContent>
-                            <Box>
-                                <Grid container spacing={2}>
-                                    {labels.map((item) =>
-                                        <Grid item>
-                                            <Chip label={item} color="primary" />
-                                        </Grid>)}
-                                </Grid>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid> */}
             </Grid>
-
-    
         </Container>
     );
 }

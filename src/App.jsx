@@ -4,18 +4,21 @@ import {autocomplete_text_fields, obj_autocomplete_text_fields} from './Componen
 //import Dropdown from './Components/Dropdown_old';
 import Main from './Components/Main';
 import Dropdown from './Components/Dropdown';
+
+import Cascading from './Components/Cascading'
+
 import Auto from './Components/Autocomplete';
 import SliderComponent from './Components/slider';
-import { Menu, MenuItem} from "@material-ui/core";
+import { Menu, MenuItem, Accordion, AccordionSummary, AccordionDetails, Typography } from "@material-ui/core";
 import axios, { Axios } from 'axios';
 import {
-  Checkbox,
-  ListItem,
   Grid,
-  ListItemText,
+  Card,
+  CardContent
 } from '@mui/material';
 import {TreeView, TreeItem} from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ArrowRightAlt';
+import FilterAlt from '@mui/icons-material/FilterAlt';
 import ChevronRightIcon from '@mui/icons-material/ArrowRightAlt';
 import { useQuery } from 'react-query'
 
@@ -24,7 +27,12 @@ import ComponentFac from './ComponentFac';
 
 import {base_url, headers} from './status'
 
+import {useContext} from "react";
+// import {GlobalContext} from "../App";
+
 export const AppContext = React.createContext();
+
+export const outputContext = React.createContext();
 
 function App() {
   //originally in Dropdown.js
@@ -167,83 +175,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
 
 
       if (isLoading) return 'Loading...'
-
-      function isChildren(key) {
-          return key !== "type" && key !== "label" && key !== "flatlabel"
-      }
-  
-      function isLast(node) {
-          return Object.keys(node).length <= 3
-      }
-
-  
-      var count = 0;
-      const renderTree = (nodes, name) => {
-          //console.log("🚀 ~ file: Script.js ~ line 54 ~ Script ~ nodes", nodes)
-          return (
-          // <TreeItem key={nodes.label} nodeId={""+count++} label={nodes.label? nodes.label:"Menu"}>
-               Object.keys(nodes).map((key) =>
-                  isChildren(key)
-                      ? isLast(nodes[key])
-                          ? <MenuItem value={nodes[key].flatlabel} key={key} onClick={() => {handleOptionClick(name.slice(2)+"__"+key, nodes[key].type, nodes[key].flatlabel) }}>
-                              {nodes[key].label}  
-                          </MenuItem>
-                          : <NestedMenuItem
-                              label={nodes[key].label}
-                              parentMenuOpen={!!menuPosition}
-                              onClick={handleItemClick}
-                              value={nodes[key].flatlabel}
-                              > 
-                              {renderTree(nodes[key], name+"__"+key)}
-                          </NestedMenuItem>
-                      : null
-              )
-              )
-          // </TreeItem>
-     
-  };
-    const handleItemClick = (click) => {
-      setMenuPosition(null);
-    };
-
-    const handleOptionClick = (option, type, flatlabel) => {
-      setMenuPosition(null);
-      setOption(option);
-      setLabels([...labels, {option:option, type:type, label:flatlabel}])
-      // name***type***flatlabel  
-      var out = option + "***" + type + "***" + flatlabel;
-      console.log("OUTPUT STRING: ----->", out)
-      setOutput([...output, out])                             // THIS IS THE OUTPUT AFTER USER SELECTS IN MENU
-      console.log("OUTPUT STRING ARRAY: ----->",output)
-    }
-
-    const handleLeftClick = (event) => {
-      if (menuPosition) {
-        return;
-      }
-      event.preventDefault();
-      setMenuPosition({
-        top: event.pageY,
-        left: event.pageX
-      });
-    };
-
-
-      function handleCheck(isChecked, key, label){
-        console.log("!!!!!options:",options,"key: ",key,"label: ",label)
-          if (isChecked) {
-              setLabel(label)
-          }
-          // }else{
-          //     console.log("else, labels: ",labels)
-          //     setLabels(labels.filter((i) => i !== label))
-          // }
-          console.log("💙label ",label, "options: ",options)
-          setType(options[label])
-      }
-  
-  
-
   
       if (error) return 'An error has occurred: ' + error.message
   
@@ -273,15 +204,6 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       // },[name,textInput])
   
   
-    // const handleChange = (event) => {
-    //   setName(event.target.value);
-   
-    // };
-
-  
-  
-  
-  
   return (
     <AppContext.Provider
     value={{
@@ -302,47 +224,47 @@ const headers = {'Authorization': "Token 681437e129e58364eeb754a654ef847f18c54e5
       // handleSliderChange
 
       //script
-      renderTree,
+      // renderTree,
       options,
       menuPosition, 
       setMenuPosition,
-      handleLeftClick,
-      isLoading
+      isLoading,
+      setOutput,
+      output
 
     }}
   >
-      <Grid container  sx={{display:'flex', flexDirection:'row'}}>
-      <Grid item xs={8}>
-        <Menu/>
-        <h1>Dropdown</h1>
-        <Dropdown/>
-      </Grid>
-      
-        <Grid item xs={4}>
-        {/* <h1>Autocomplete/Slider</h1>
-          {displayAuto? <Auto/>:""}
-          {displaySlider?<SliderComponent/>:""} */}
 
-            {/* <Grid  xs={12} padding={1}>
-              <item>
-                <ComponentFac params={output[0]} />
-              </item>
-            </Grid> */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<FilterAlt />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Filter</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container direction={'row'} spacing={2} alignItems="center" justify = "center">
+            <Grid item xs={4} >
+              <Dropdown/>
+            </Grid>
+            <Grid item xs={8}>
+              <Card>
+              {output.map((item) => {
+                return(
+                  <Grid margin={3} >
+                    <Grid item>
+                      <ComponentFac params={item} />
+                    </Grid>
+                  </Grid>
+                )})
+              }
+              </Card>
+            </Grid>
+          </Grid>
+          </AccordionDetails>
+        </Accordion>
 
-          {output.map((item) => {
-
-            {console.log("ITEM---->", item)}
-            return(
-              <Grid  xs={12} padding={1}>
-                <item>
-                  <ComponentFac params={item} />
-                </item>
-              </Grid>
-            )
-            })
-          }
-        </Grid>
-      </Grid>
       <Main/>
     </AppContext.Provider>
   );

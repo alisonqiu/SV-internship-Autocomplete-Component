@@ -32,6 +32,7 @@ export default function Auto() {
         //params.inputProps.value is what i type in 
         //console.log("🚀 ~ file: Dropdown.js ~ line 108 ~ Dropdown ~ params", params.InputProps)
         setTestInput(params.inputProps.value)
+        console.log("AUTOCOMPLETE OUTPUT: -----> ", params)
         return <TextField {...params} label="field" />
          
     }}

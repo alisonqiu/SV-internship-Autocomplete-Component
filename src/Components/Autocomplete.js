@@ -2,7 +2,10 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { AppContext } from "../App";
-
+import {base_url, headers} from '../status'
+import {autocomplete_text_fields, obj_autocomplete_text_fields} from './vars'
+const header={ "Authorization": 'Token bd233c83dceb9a0f70ffd2b47d6cd3a18a095260',
+}
 
 export default function Auto() {
  const { 
@@ -11,7 +14,7 @@ export default function Auto() {
     value,
     setValue} = React.useContext(AppContext)
 
-    console.log("DROPDOWN OPTION: ", dropdownOptions)
+
   return (
 
     <Autocomplete
